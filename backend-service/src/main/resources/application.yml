@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: backend-service
+
+server:
+  port: ${SERVER_PORT:8080}
+eureka:
+  client:
+    service-url:
+      #defaultZone: ${EUREKA_DEFAULT_ZONE_URL:http://localhost:8761/eureka}
+      left: ${EUREKA_LEFT_URL:http://localhost:8761/eureka}
+      right: ${EUREKA_RIGHT_URL:http://localhost:8761/eureka}
+    availability-zones:
+      europe: left,right
+    region: europe
+    prefer-same-zone-eureka: true
+    register-with-eureka: true
+    registry-fetch-interval-seconds: 10
+    fetch-registry: true
+  instance:
+    metadataMap.zone: ${EUREKA_DEFAULT_ZONE:left}
+    health-check-url-path: /actuator/health
+    lease-renewal-interval-in-seconds: 10
+    preferIpAddress: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

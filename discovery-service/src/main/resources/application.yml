@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: discovery-service
+server:
+  port: ${SERVER_PORT:8761}
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    region: europe
+    service-url:
+      left: ${EUREKA_LEFT_URL}
+      right: ${EUREKA_RIGHT_URL}
+    availability-zones:
+      europe: left,right
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

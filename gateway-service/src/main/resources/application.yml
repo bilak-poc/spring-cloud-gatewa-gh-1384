@@ -1,0 +1,74 @@
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    discovery:
+      enabled: true
+    loadbalancer:
+      ribbon:
+        enabled: true
+      retry:
+        enabled: true
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: backend-service
+          uri: lb://backend-service
+          predicates:
+            - Path=/backend-service/**
+          filters:
+            - RewritePath=/backend-service/(?<segment>.*), /$\{segment}
+
+#ribbon:
+#  OkToRetryOnAllOperations: true
+#  ReadTimeout: 20000
+#  ConnectTimeout: 1000
+#  MaxTotalHttpConnections: 1800
+#  MaxConnectionsPerHost: 100
+#  MaxAutoRetries: 1
+#  MaxAutoRetriesNextServer: 1
+#  retryableStatusCodes: 404,500,501,502,503
+
+backend-service:
+  ribbon:
+    OkToRetryOnAllOperations: true
+    OkToRetryOnAllErrors: true
+    ReadTimeout: 30000
+    ConnectTimeout: 30000
+    MaxTotalHttpConnections: 1000
+    MaxConnectionsPerHost: 100
+    MaxAutoRetries: 1
+    MaxAutoRetriesNextServer: 1
+    retryableStatusCodes: 404,500,501,502,503
+
+eureka:
+  client:
+    service-url:
+      #defaultZone: ${EUREKA_DEFAULT_ZONE_URL:http://localhost:8761/eureka}
+      left: ${EUREKA_LEFT_URL:http://localhost:8761/eureka}
+      right: ${EUREKA_RIGHT_URL:http://localhost:8761/eureka}
+    availability-zones:
+      europe: left,right
+    region: europe
+    prefer-same-zone-eureka: true
+    register-with-eureka: false
+    registry-fetch-interval-seconds: 10
+    fetch-registry: true
+  instance:
+    metadataMap.zone: ${EUREKA_DEFAULT_ZONE:left}
+    health-check-url-path: /actuator/health
+    lease-renewal-interval-in-seconds: 10
+    preferIpAddress: true
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#logging:
+#  level:
+#    com.netflix: DEBUG
