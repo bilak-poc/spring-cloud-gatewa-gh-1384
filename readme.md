@@ -1,5 +1,8 @@
 # sample application for [spring-cloud-gateway #1384](https://github.com/spring-cloud/spring-cloud-gateway/issues/1384)
 
+### UPDATE
+it seems to be working when configured like in [this issue](https://github.com/spring-cloud/spring-cloud-gateway/issues/580) (also POST and PUT is working).
+However gateway returns on 500 when switching the backend services [log here](gateway-error.txt).
 
 ### prerequisites
 * jdk 8
