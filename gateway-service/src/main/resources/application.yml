@@ -19,7 +19,24 @@ spring:
           predicates:
             - Path=/backend-service/**
           filters:
-            - RewritePath=/backend-service/(?<segment>.*), /$\{segment}
+            - name: Retry
+              args:
+                retries: 3
+                routeId: backend-service
+                methods:
+                  - GET
+                  - PUT
+                  - POST
+                  - DELETE
+                statuses:
+                  - NOT_FOUND
+                  - INTERNAL_SERVER_ERROR
+                  - BAD_GATEWAY
+                  - SERVICE_UNAVAILABLE
+            - name: RewritePath
+              args:
+                regexp: /backend-service/(?<segment>.*)
+                replacement: /$\{segment}
 
 #ribbon:
 #  OkToRetryOnAllOperations: true
